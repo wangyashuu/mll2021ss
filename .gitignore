@@ -1,4 +1,5 @@
 # cache download data for reports
+.report_data/
 .cache/
 #
 # Created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks
