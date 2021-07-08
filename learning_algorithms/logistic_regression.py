@@ -1,16 +1,19 @@
 import numpy as np
 
-from interfaces.classifier import Classifier
+from interfaces.base_model import BaseModel
 
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
 
-def logistic_regression_loss(X, y, w):
-    y_hat = sigmoid(X@w)
+def logistic_regression_eval(X, w)
+    return sigmoid(X@w)
+
+
+def logistic_regression_loss(y, y_hat):
     m = y.shape[0]
     loss = - (y*np.log(y_hat) + (1-y)*np.log(1-y_hat))
-    return 1/m * np.sum(loss, axis=0)
+    return 1.0/m * np.sum(loss, axis=0)
 
 
 def logistic_regression_train(X, Y, learning_rate=0.1, iteration_count=1000, batch_size=None):
@@ -24,17 +27,18 @@ def logistic_regression_train(X, Y, learning_rate=0.1, iteration_count=1000, bat
             choices = np.random.choice(m, size=batch_size, replace=False)
             X_chosen, Y_chosen = X[choices, :], Y[choices, :]
 
-        gradient = sigmoid(X_chosen@w) - Y_chosen
-        w -= 1.0/(batch_size or m) * learning_rate * X_chosen.T @ gradient
-        # print(logistic_regression_loss(X, Y, w))
+        Y_hat = logistic_regression_eval(X_chosen, w)
+        gradient = X_chosen.T @ (Y_hat - Y_chosen)
+        w -= 1.0/(batch_size or m) * learning_rate * gradient
+        # print(logistic_regression_loss(Y_chosen, Y_hat))
     return w
 
 
 def logistic_regression_predict(X, w):
-    return sigmoid(X@w)
+    return (logistic_regression_eval(X, w) > 0.5) * 1
 
 
-class LogisticRegressionClassifier (Classifier):
+class LogisticRegression (BaseModel):
 
     def learn(self, X, Y, learning_rate=0.1, iteration_count=1000, batch_size=None):
         self.w = logistic_regression_train(X, Y, learning_rate=learning_rate, iteration_count=iteration_count, batch_size=batch_size)

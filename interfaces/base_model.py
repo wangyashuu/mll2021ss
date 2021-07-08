@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class Classifier(ABC):
+class BaseModel(ABC):
 
     @abstractmethod
     def learn(self, features, target):
@@ -10,4 +10,3 @@ class Classifier(ABC):
     @abstractmethod
     def infer(self, features):
         pass
-
