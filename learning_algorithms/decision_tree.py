@@ -1,6 +1,9 @@
 import random
 import string
 
+from interfaces.base_model import BaseModel
+
+
 def gini(frequencies):
     return 1 - np.sum(frequencies**2)
 
@@ -11,6 +14,7 @@ def entropy(frequencies, epsilon=1e-10):
 
 def misclass(frequencies):
     return 1 - np.max(frequencies)
+
 
 def to_frequency(counts):
     return counts / np.sum(counts)
@@ -65,7 +69,7 @@ class Tree:
         return head + out + tail
 
 
-def ID3_train(X, y, attributes, impurity_function, get_matchers=get_matchers_by_equality):
+def ID3_train(X, y, attributes=None, impurity_function=gini, get_matchers=get_matchers_by_equality):
     """
     args:
         X: (m, n)
@@ -79,8 +83,9 @@ def ID3_train(X, y, attributes, impurity_function, get_matchers=get_matchers_by_
 
     classes, counts = np.unique(y, return_counts=True)
     label = np.squeeze(classes[np.argmax(counts)])
+    attributes = attributes if attributes != None else np.arange(X.shape[1])
 
-    # Stop criterion: 1. Nodes is clean; 2: Exhausted attributes
+    # stop criterion: 1. Nodes is clean; 2: Exhausted attributes
     if len(classes) == 1 or len(attributes) == 0:
         return Tree(None, label)
 
@@ -111,3 +116,12 @@ def ID3_predict_one(x, tree):
 
 def ID3_predict(X, tree):
     return np.array([ID3_predict_one(x, tree) for x in X])
+
+
+def ID3 (BaseModel):
+
+    def learn(self, X, y, attributes=None, impurity_function=None, get_matchers=None)
+        self.tree = ID3_train(X, y, attributes, impurity_function, get_matchers=get_matchers)
+
+    def infer(self, X):
+        return ID3_predict(X, self.tree)
