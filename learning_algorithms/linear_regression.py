@@ -36,7 +36,7 @@ def linear_regression_predict(X, w):
 class LinearRegression (BaseModel):
 
     def learn(self, X, Y, learning_rate=0.1, iteration_count=1000, batch_size=None):
-        self.w = linear_regression_train(X, Y, learning_rate=0.1, iteration_count=1000, batch_size=None)
+        self.w = linear_regression_train(X, Y, learning_rate=learning_rate, iteration_count=iteration_count, batch_size=batch_size)
 
     def infer(self, X):
         return linear_regression_predict(X, self.w)

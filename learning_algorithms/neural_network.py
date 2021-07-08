@@ -115,7 +115,7 @@ class NeuralNetwork (BaseModel):
 
     def learn(self, X, Y, layers, learning_rate=0.1, iteration_count=1000, batch_size=None):
         self.layers = layers
-        Ws, bs = neural_network_train(X, Y, layers, learning_rate=0.1, iteration_count=1000, batch_size=None)
+        Ws, bs = neural_network_train(X, Y, layers, learning_rate=learning_rate, iteration_count=iteration_count, batch_size=batch_size)
         self.Ws = Ws
         self.bs = bs
 
