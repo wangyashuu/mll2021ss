@@ -26,14 +26,14 @@ def tanh_gradient(z):
     return 1 - np.tanh(z)**2
 
 
-def neural_networks_loss(Y, Y_hat):
+def neural_network_loss(Y, Y_hat):
     m = Y.shape[0]
     err = -np.sum(Y*np.log(Y_hat))
     J = 1./m * err
     return J
 
 
-def neural_networks_forward_propagation(X, Ws, bs, activation_functions):
+def neural_network_forward_propagation(X, Ws, bs, activation_functions):
     no_layers = len(Ws)
     Zs, As = [None]*no_layers, [None]*no_layers
     Zs[0] = X@Ws[0] + bs[0]
@@ -46,7 +46,7 @@ def neural_networks_forward_propagation(X, Ws, bs, activation_functions):
     return Zs, As
 
 
-def neural_networks_backward_propagation(X, Y, Ws, bs, Zs, As, activation_gradient_functions):
+def neural_network_backward_propagation(X, Y, Ws, bs, Zs, As, activation_gradient_functions):
     no_layers = len(activation_gradient_functions)
     n, m = X.shape
     dZs, dWs, dbs = [None]*no_layers, [None]*no_layers, [None]*no_layers
@@ -70,7 +70,7 @@ def neural_networks_backward_propagation(X, Y, Ws, bs, Zs, As, activation_gradie
     return dZs, dWs, dbs
 
 
-def neural_networks_train(X, Y, layers, batch_size=None, iteration_count=1000, learning_rate=0.1):
+def neural_network_train(X, Y, layers, batch_size=None, iteration_count=1000, learning_rate=0.1):
     m, n = X.shape
     no_layers = len(layers)
     activation_functions = [l[1] for l in layers]
@@ -95,19 +95,19 @@ def neural_networks_train(X, Y, layers, batch_size=None, iteration_count=1000, l
             choices = np.random.choice(m, size=batch_size, replace=False)
             X_chosen, Y_chosen = X[choices, :], Y[choices, :]
 
-        Zs, As = neural_networks_forward_propagation(X_chosen, Ws, bs, activation_functions)
-        dZs, dWs, dbs = neural_networks_backward_propagation(X_chosen, Y_chosen, Ws, bs, Zs, As, activation_gradient_functions)
+        Zs, As = neural_network_forward_propagation(X_chosen, Ws, bs, activation_functions)
+        dZs, dWs, dbs = neural_network_backward_propagation(X_chosen, Y_chosen, Ws, bs, Zs, As, activation_gradient_functions)
 
         for i in range(len(Ws)):
             Ws[i] -= learning_rate * dWs[i]
             bs[i] -= learning_rate * dbs[i]
-        # print('loss', neural_networks_loss(y, As[no_layers - 1]))
+        # print('loss', neural_network_loss(Y_chosen, As[no_layers - 1]))
     return Ws, bs
 
 
-def neural_networks_predict(X, Ws, bs, layers):
+def neural_network_predict(X, Ws, bs, layers):
     activation_functions = [l[1] for l in layers]
-    _, As = neural_networks_forward_propagation(X, Ws, bs, activation_functions)
+    _, As = neural_network_forward_propagation(X, Ws, bs, activation_functions)
     return (As[-1] > 0.5) * 1
 
 
@@ -115,9 +115,9 @@ class NeuralNetwork (BaseModel):
 
     def learn(self, X, Y, layers, learning_rate=0.1, iteration_count=1000, batch_size=None):
         self.layers = layers
-        Ws, bs = neural_networks_train(X, Y, layers, learning_rate=0.1, iteration_count=1000, batch_size=None)
+        Ws, bs = neural_network_train(X, Y, layers, learning_rate=0.1, iteration_count=1000, batch_size=None)
         self.Ws = Ws
         self.bs = bs
 
     def infer(self, X):
-        return neural_networks_predict(X, self.Ws, self.bs, self.layers)
+        return neural_network_predict(X, self.Ws, self.bs, self.layers)

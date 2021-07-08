@@ -48,7 +48,7 @@ def support_vector_machine_predict(X, w):
 class SupportVectorMachine (BaseModel):
 
     def learn(self, X, Y, big_c=None, learning_rate=None, iteration_count=None, batch_size=None):
-        self.w = support_vector_machine_train(X, Y, big_c=1, learning_rate=0.1, iteration_count=1000, batch_size=None):
+        self.w = support_vector_machine_train(X, Y, big_c=1, learning_rate=0.1, iteration_count=1000, batch_size=None)
 
     def infer(self, X):
         return support_vector_machine_predict(X, self.w)

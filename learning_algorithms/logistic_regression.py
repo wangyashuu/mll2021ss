@@ -6,7 +6,7 @@ def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
 
-def logistic_regression_eval(X, w)
+def logistic_regression_eval(X, w):
     return sigmoid(X@w)
 
 

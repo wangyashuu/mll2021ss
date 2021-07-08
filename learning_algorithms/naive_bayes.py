@@ -24,7 +24,7 @@ def naive_bayes_train(X, Y, ignore_min_count=0, ignore_top=0): # m*n m*1
 
     # P(C) probability of each class
     # (1, c) matrix, prior_probability[j] indicates the probability of class j
-    prior_probability = np.log(indexes.sum(axis=0) / m)
+    prior_probability = np.log(class_indicator.sum(axis=0) / m)
 
     # sum up the counts of each feature (in each class).
     # (n, c) matrix, feature_counts[i][j] indicates counts of feature i in class j
