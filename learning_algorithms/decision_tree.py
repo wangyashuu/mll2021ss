@@ -1,5 +1,6 @@
 import random
 import string
+import numpy as np
 
 from interfaces.base_model import BaseModel
 
@@ -58,8 +59,8 @@ class Tree:
 
     def digraph(self, level=0):
         out = ""
-        out +=  "digraph G {\n rankdir=LR;\n" if level == 0 else ""
-        out += = self.graph_id + "[label=\"(attr: %s, label: %s)\"];\n"%(str(self.attr), str(self.label))
+        out += "digraph G {\n rankdir=LR;\n" if level == 0 else ""
+        out += self.graph_id + "[label=\"(attr: %s, label: %s)\"];\n"%(str(self.attr), str(self.label))
         for b in self.branches:
             edge_label = "\"X[" + str(self.attr) + "] " + b + "\""
             _, child = self.branches[b]
@@ -83,7 +84,7 @@ def ID3_train(X, y, attributes=None, impurity_function=gini, get_matchers=get_ma
 
     classes, counts = np.unique(y, return_counts=True)
     label = np.squeeze(classes[np.argmax(counts)])
-    attributes = attributes if attributes != None else np.arange(X.shape[1])
+    attributes = attributes if attributes != None else np.arange(X.shape[1]).tolist()
 
     # stop criterion: 1. Nodes is clean; 2: Exhausted attributes
     if len(classes) == 1 or len(attributes) == 0:
@@ -101,7 +102,7 @@ def ID3_train(X, y, attributes=None, impurity_function=gini, get_matchers=get_ma
     new_attributes = [a for a in attributes if a != attr]
     for i, matcher_name in enumerate(sorted(matchers.keys())):
         indices = class_indicator[i]
-        sub_tree = ID3(X[indices], y[indices], new_attributes, impurity_function)
+        sub_tree = ID3_train(X[indices], y[indices], attributes=new_attributes, impurity_function=impurity_function)
         t.add(matcher_name, (matchers[matcher_name], sub_tree))
     return t
 
@@ -120,7 +121,7 @@ def ID3_predict(X, tree):
 
 def ID3 (BaseModel):
 
-    def learn(self, X, y, attributes=None, impurity_function=None, get_matchers=None)
+    def learn(self, X, y, attributes=None, impurity_function=None, get_matchers=None):
         self.tree = ID3_train(X, y, attributes, impurity_function, get_matchers=get_matchers)
 
     def infer(self, X):
