@@ -121,7 +121,7 @@ def ID3_predict(X, tree):
 
 def ID3 (BaseModel):
 
-    def learn(self, X, y, attributes=None, impurity_function=None, get_matchers=None):
+    def learn(self, X, y, attributes=None, impurity_function=gini, get_matchers=get_matchers_by_equality):
         self.tree = ID3_train(X, y, attributes, impurity_function, get_matchers=get_matchers)
 
     def infer(self, X):
