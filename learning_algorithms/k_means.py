@@ -1,6 +1,6 @@
 import numpy as np
 
-from interfaces.classifier import Classifier
+from interfaces.base_model import BaseModel
 
 def k_means_train(X, k, iteration_count=1000):
     centroids = X[np.random.choice(X.shape[0], k)] # replacement # k*n
@@ -35,7 +35,7 @@ def k_means_loss(X, Y):
     return np.mean(np.linalg.norm(X - Y, axis=1, keepdims=True))
 
 
-class KMeansClassifier (Classifier):
+class KMeans (BaseModel):
 
     def learn(self, X, k, iteration_count=1000):
         self.centroids = k_means_train(X, k, iteration_count)
