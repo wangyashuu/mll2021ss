@@ -5,6 +5,9 @@ from interfaces.base_model import BaseModel
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
+def softmax(z):
+    exps = np.exp(z)
+    return exps / np.sum(exps, axis=1, keepdims=True)
 
 def logistic_regression_eval(X, w):
     return sigmoid(X@w)
@@ -18,7 +21,8 @@ def logistic_regression_loss(y, y_hat):
 
 def logistic_regression_train(X, Y, learning_rate=0.1, iteration_count=1000, batch_size=None):
     m, n = X.shape
-    w = np.zeros((n, 1))
+    _, c = Y.shape
+    w = np.zeros((n, c))
 
     for i in range(iteration_count):
 
